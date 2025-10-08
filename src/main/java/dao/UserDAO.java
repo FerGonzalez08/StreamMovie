@@ -8,17 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet; 
 import java.sql.SQLException; 
 
-  
-
 public class UserDAO implements CRUD<User> 
 { 
     @Override 
-
     public void create(User user) 
     { 
-
         String sql = "INSERT INTO Users (email, birthdate, userName, password, role) VALUES (?, ?, ?, ?, ?)"; 
-
         try (Connection conn = DatabaseConnection.getConnection(); 
 
         PreparedStatement stmt = conn.prepareStatement(sql)) 
