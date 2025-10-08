@@ -2,15 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Meta para responsive: asegura que el layout sea usable en móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Movie - Admin Dashboard</title>
     <style>
+        /* Estilos generales de la página */
         body {
             font-family: Arial, sans-serif;
-            background-color: #333333; /* Dark grey fallback */
-            background-image: url('https://source.unsplash.com/random/1920x1080/?cinema,movie'); /* Movie-themed background */
+            background-color: #333333; 
+            /* Imagen de fondo aleatoria relacionada con cine */
+            background-image: url('https://source.unsplash.com/random/1920x1080/?cinema,movie'); 
             background-size: cover;
             background-position: center;
+            /* fixed mantiene la imagen mientras se hace scroll */
             background-attachment: fixed;
             color: #ffffff;
             margin: 0;
@@ -19,23 +23,26 @@
             overflow-y: auto;
         }
 
+        /* Cabecera con título de la aplicación */
         header {
-            background-color: rgba(200, 162, 200, 0.9); /* Soft purple with transparency */
+            background-color: rgba(200, 162, 200, 0.9); 
             padding: 10px 20px;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            /* efecto de desenfoque detrás del header para mejor legibilidad */
             backdrop-filter: blur(5px);
         }
 
         .app-title {
-            color: #333333; /* Dark grey */
+            color: #333333; 
             margin: 0;
             font-size: 28px;
             font-weight: bold;
         }
 
+        /* Barra de navegación principal */
         nav {
-            background-color: #333333; /* Dark grey */
+            background-color: #333333; 
             padding: 0;
             margin: 0;
             display: flex;
@@ -44,6 +51,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
+        /* Lista horizontal para los enlaces de navegación */
         nav ul {
             list-style: none;
             margin: 0;
@@ -57,33 +65,37 @@
             margin: 0 15px;
         }
 
+        /* Estilo de cada botón/enlace de la navegación */
         nav a {
             color: #ffffff;
             text-decoration: none;
             padding: 10px 15px;
-            background-color: rgba(200, 162, 200, 0.7); /* Soft purple button-like */
+            background-color: rgba(200, 162, 200, 0.7); 
             border-radius: 5px;
             transition: background-color 0.3s;
             font-size: 14px;
         }
 
+        /* Efecto hover para indicar interactividad */
         nav a:hover {
-            background-color: #A78BFA; /* Darker soft purple */
+            background-color: #A78BFA; 
         }
 
+        /* Contenedor principal centrado y con fondo semitransparente */
         main {
             max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
-            background-color: rgba(200, 162, 200, 0.9); /* Soft purple overlay */
+            background-color: rgba(200, 162, 200, 0.9); 
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
             text-align: center;
         }
 
+        /* Texto del panel (se define color oscuro para contraste con el fondo claro del main) */
         .dashboard-content {
-            color: #333333; /* Dark grey text */
+            color: #333333; 
         }
 
         .dashboard-content h2 {
@@ -92,12 +104,16 @@
     </style>
 </head>
 <body>
+    <!-- Header: título principal de la aplicación -->
     <header>
         <h1 class="app-title">Stream Movie</h1>
     </header>
     
+    <!-- Nav: enlaces rápidos a secciones administrativas / usuario -->
     <nav>
         <ul>
+            <!-- Cada enlace apunta a un ancla local (placeholder). 
+                 En la versión final deberían enlazar a rutas reales o manejarse con JS. -->
             <li><a href="#add-movie">Add Movie</a></li>
             <li><a href="#erase-movie">Erase Movie</a></li>
             <li><a href="#edit-movie">Edit Movie</a></li>
@@ -109,15 +125,23 @@
         </ul>
     </nav>
     
+    <!-- Main: contenido principal del dashboard -->
     <main>
         <div class="dashboard-content">
             <h2>Admin Dashboard</h2>
+            <!-- Breve bienvenida; aquí se puede insertar contenido dinámico (estadísticas, tablas) -->
             <p>Welcome, Admin! Use the menu above to manage movies, view recommendations, or access your profile.</p>
-            <!-- Placeholder for dynamic content, e.g., movie stats or grid -->
+            <!-- Placeholder para información reciente o widgets -->
             <div style="margin-top: 20px;">
                 <p>Recent Actions: Added 5 movies this week.</p>
             </div>
         </div>
     </main>
+
+    <!-- Notas:
+         - Considerar añadir etiquetas ARIA y atributos alt para mejorar accesibilidad.
+         - Para seguridad y rendimiento, evitar cargar imágenes externas en producción sin control.
+         - Reemplazar los anchors por links reales o manejar navegación con JS cuando haya backend/SPA.
+    -->
 </body>
 </html>
