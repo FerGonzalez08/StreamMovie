@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Movie - Login</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333; /* Dark grey fallback */
+            background-image: url('https://external-preview.redd.it/fOZoqhT9q9hj64d7sEGT294aSa0kpFax03rvLljkeIA.jpg?auto=webp&s=91d8ffc7bb844496df043a4b1252877ab67879fb'); /* Placeholder movie-themed background image */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: rgba(200, 162, 200, 0.9); /* Soft purple with transparency for overlay effect */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            text-align: center;
+            backdrop-filter: blur(5px); /* Optional: adds a subtle blur for better readability over image */
+        }
+
+        .app-title {
+            color: #333333; /* Dark grey for heading */
+            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #333333; /* Dark grey for heading */
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #333333;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333333;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            color: #333333;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .sign-in {
+            background-color: #333333; /* Dark grey */
+            color: #ffffff;
+        }
+
+        .sign-in:hover {
+            background-color: #555555;
+        }
+
+        .sign-out {
+            background-color: #A78BFA; /* Slightly darker soft purple for contrast */
+            color: #333333;
+        }
+
+        .sign-out:hover {
+            background-color: #9F7AEA;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="app-title">Stream Movie</h1>
+        <h2>Login</h2>
+        <form>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="cta-button sign-in">Sign In</button>
+            <button type="button" class="cta-button sign-out">Sign Out</button>
+        </form>
+    </div>
+</body>
+</html>
