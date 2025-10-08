@@ -1,6 +1,9 @@
-package src.main.java.dao;
+package dao;
 
-public class CRUD 
+public interface CRUD<T> 
 {
-    
+    void create(T obj);
+    T read(String id);
+    void update(T obj);
+    void delete(String id);
 }
