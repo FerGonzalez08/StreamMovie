@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Movie - User Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333; /* Dark grey fallback */
+            background-image: url('https://source.unsplash.com/random/1920x1080/?cinema,movie'); /* Movie-themed background */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        header {
+            background-color: rgba(200, 162, 200, 0.9); /* Soft purple with transparency */
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .app-title {
+            color: #333333; /* Dark grey */
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        nav {
+            background-color: #333333; /* Dark grey */
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav li {
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: rgba(200, 162, 200, 0.7); /* Soft purple button-like */
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            background-color: #A78BFA; /* Darker soft purple */
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(200, 162, 200, 0.9); /* Soft purple overlay */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+
+        .home-content {
+            color: #333333; /* Dark grey text */
+        }
+
+        .home-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .movie-card {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+            color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="app-title">Stream Movie</h1>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#movies">Movies</a></li>
+            <li><a href="#profile">Profile</a></li>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#recommendations">Recommendations</a></li>
+            <li><a href="#my-list">My List</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <div class="home-content">
+            <h2>Welcome to Stream Movie!</h2>
+            <p>Discover and watch your favorite movies. Use the menu to browse or manage your list.</p>
+            <!-- Placeholder for featured movies grid -->
+            <div class="movie-grid">
+                <div class="movie-card">
+                    <h3>Featured Movie 1</h3>
+                    <p>Action-packed thriller.</p>
+                </div>
+                <div class="movie-card">
+                    <h3>Featured Movie 2</h3>
+                    <p>Romantic comedy.</p>
+                </div>
+                <div class="movie-card">
+                    <h3>Featured Movie 3</h3>
+                    <p>Sci-fi adventure.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

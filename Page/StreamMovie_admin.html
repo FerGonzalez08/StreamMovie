@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Movie - Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333333; /* Dark grey fallback */
+            background-image: url('https://source.unsplash.com/random/1920x1080/?cinema,movie'); /* Movie-themed background */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        header {
+            background-color: rgba(200, 162, 200, 0.9); /* Soft purple with transparency */
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .app-title {
+            color: #333333; /* Dark grey */
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        nav {
+            background-color: #333333; /* Dark grey */
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav li {
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            background-color: rgba(200, 162, 200, 0.7); /* Soft purple button-like */
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            background-color: #A78BFA; /* Darker soft purple */
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(200, 162, 200, 0.9); /* Soft purple overlay */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+
+        .dashboard-content {
+            color: #333333; /* Dark grey text */
+        }
+
+        .dashboard-content h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="app-title">Stream Movie</h1>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#add-movie">Add Movie</a></li>
+            <li><a href="#erase-movie">Erase Movie</a></li>
+            <li><a href="#edit-movie">Edit Movie</a></li>
+            <li><a href="#profile">Profile</a></li>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#recommendations">Recommendations</a></li>
+            <li><a href="#my-list">My List</a></li>
+            <li><a href="#movies">Movies</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <div class="dashboard-content">
+            <h2>Admin Dashboard</h2>
+            <p>Welcome, Admin! Use the menu above to manage movies, view recommendations, or access your profile.</p>
+            <!-- Placeholder for dynamic content, e.g., movie stats or grid -->
+            <div style="margin-top: 20px;">
+                <p>Recent Actions: Added 5 movies this week.</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
