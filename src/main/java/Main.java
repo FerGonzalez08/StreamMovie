@@ -1,2 +1,4 @@
-public class Main {
+public class Main 
+{
+    String sapo="hola";
 }
