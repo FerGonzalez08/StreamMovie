@@ -1,35 +1,293 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream Movie - User Home</title>
-    <link rel="stylesheet" href="StreamMovie_user.css">
+    <title>StreamMovie</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #141414;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 10%, transparent);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transition: background 0.3s;
+        }
+
+        .header.scrolled {
+            background: #141414;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        nav a {
+            color: #e5e5e5;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        nav a.active {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .main-content {
+            padding: 100px 50px 50px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .hero-section {
+            background: linear-gradient(to bottom, transparent, #141414),
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1920') center/cover;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 50px;
+            margin: -100px -50px 40px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: #b3b3b3;
+            max-width: 600px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin: 40px 0 20px;
+            font-weight: 600;
+        }
+
+        .movie-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .movie-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #e50914, #141414);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .movie-info-card {
+            padding: 15px;
+        }
+
+        .movie-title-card {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .movie-meta {
+            color: #b3b3b3;
+            font-size: 13px;
+            margin: 4px 0;
+        }
+
+        .btn-list {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .btn-add:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .btn-remove {
+            background: #e50914;
+            color: #fff;
+        }
+
+        .btn-remove:hover {
+            background: #f40612;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #e50914;
+            background: rgba(255,255,255,0.15);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #b3b3b3;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 16px 24px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .notification.success {
+            background: #4CAF50;
+        }
+
+        .notification.error {
+            background: #e50914;
+        }
+
+        .notification.info {
+            background: #2196F3;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .main-content {
+                padding: 80px 20px 30px;
+            }
+
+            .hero-section {
+                height: 300px;
+                padding: 0 20px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            nav {
+                gap: 15px;
+            }
+
+            .movie-row {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
 </head>
 <body>
-<header>
-    <h1 class="app-title">Stream Movie</h1>
-</header>
+<div class="header" id="header">
+    <div class="logo">STREAMMOVIE</div>
+    <nav>
+        <a href="#home" data-section="home" class="active">Inicio</a>
+        <a href="#movies" data-section="movies">Películas</a>
+        <a href="#my-list" data-section="my-list">Mi Lista</a>
+        <a href="#profile" data-section="profile">Perfil</a>
+    </nav>
+</div>
 
-<nav>
-    <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#movies">Movies</a></li>
-        <li><a href="#recommendations">Recommendations</a></li>
-        <li><a href="#my-list">My List</a></li>
-        <li><a href="#profile">Profile</a></li>
-    </ul>
-</nav>
+<div class="main-content" id="main-content">
+    <div>Cargando...</div>
+</div>
 
-<main>
-    <div class="home-content">
-        <h2>Welcome to Stream Movie!</h2>
-        <p>Cargando películas...</p>
-        <div class="movie-grid"></div>
-    </div>
-</main>
-
-<!-- Scripts -->
 <script src="config.js"></script>
 <script src="user.js"></script>
 </body>

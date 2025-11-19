@@ -1,6 +1,6 @@
-// admin.js - Lógica del panel de administración
+// admin.js - Panel de administración con validaciones
 document.addEventListener('DOMContentLoaded', () => {
-    // Verificar que el usuario sea admin
+    // Verificar autenticación
     if (!SessionManager.isLoggedIn() || !SessionManager.isAdmin()) {
         alert('Acceso denegado. Debes ser administrador.');
         window.location.href = 'StreamMovie_login_clean.html';
@@ -10,65 +10,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentUser = SessionManager.getUser();
     let movies = [];
 
-    // Cargar películas al iniciar
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // Navegación
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            e.target.classList.add('active');
+            const section = e.target.getAttribute('data-section');
+            loadSection(section);
+        });
+    });
+
+    // Cargar películas
     loadMovies();
 
-    // Manejar navegación
-    setupNavigation();
-
-    // Funciones principales
     async function loadMovies() {
         try {
             movies = await apiRequest(API_CONFIG.ENDPOINTS.MOVIES);
-            updateDashboard();
+            loadSection('home');
         } catch (error) {
-            console.error('Error al cargar películas:', error);
+            console.error('Error:', error);
             showNotification('Error al cargar películas', 'error');
         }
     }
 
-    function updateDashboard() {
-        const dashboardContent = document.querySelector('.dashboard-content');
-
-        dashboardContent.innerHTML = `
-            <h2>Admin Dashboard</h2>
-            <p>Bienvenido, <strong>${currentUser.userName}</strong>!</p>
-
-            <div style="margin: 30px 0; padding: 20px; background-color: #fff; border-radius: 8px;">
-                <h3 style="color: #333; margin-bottom: 15px;">Estadísticas</h3>
-                <p style="color: #333;">Total de películas en el catálogo: <strong>${movies.length}</strong></p>
-                <p style="color: #333;">Última actualización: ${new Date().toLocaleDateString()}</p>
-            </div>
-
-            <div id="content-section">
-                <p>Usa el menú superior para gestionar películas.</p>
-            </div>
-        `;
-    }
-
-    function setupNavigation() {
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const section = e.target.getAttribute('href').substring(1);
-                loadSection(section);
-            });
-        });
-    }
-
     function loadSection(section) {
-        const contentSection = document.getElementById('content-section') ||
-                             document.querySelector('.dashboard-content');
+        const mainContent = document.getElementById('main-content');
 
         switch(section) {
+            case 'home':
+                showDashboard();
+                break;
             case 'add-movie':
                 showAddMovieForm();
-                break;
-            case 'erase-movie':
-                showDeleteMovieSection();
-                break;
-            case 'edit-movie':
-                showEditMovieSection();
                 break;
             case 'movies':
                 showMoviesList();
@@ -76,51 +60,126 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'profile':
                 showProfile();
                 break;
-            case 'home':
-                updateDashboard();
-                break;
-            default:
-                contentSection.innerHTML = '<p>Sección en desarrollo</p>';
         }
     }
 
+    function showDashboard() {
+        const mainContent = document.getElementById('main-content');
+        const totalMovies = movies.length;
+        const latestYear = movies.length > 0 ? Math.max(...movies.map(m => m.anio || 0)) : 0;
+
+        mainContent.innerHTML = `
+            <div class="section-title">Dashboard de Administración</div>
+            <p style="color: #b3b3b3; margin-bottom: 30px;">Bienvenido, ${currentUser.userName}</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">${totalMovies}</div>
+                    <div class="stat-label">Total Películas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${latestYear}</div>
+                    <div class="stat-label">Año Más Reciente</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${new Set(movies.map(m => m.genero)).size}</div>
+                    <div class="stat-label">Géneros Diferentes</div>
+                </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 40px;">Películas Recientes</div>
+            <div class="movie-grid">
+                ${movies.slice(0, 6).map(movie => `
+                    <div class="movie-card">
+                        <div class="movie-title">${movie.titulo}</div>
+                        <div class="movie-info">${movie.genero}</div>
+                        <div class="movie-info">${movie.anio || 'N/A'}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
     function showAddMovieForm() {
-        const contentSection = document.getElementById('content-section');
-        contentSection.innerHTML = `
-            <div style="background-color: #fff; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto;">
-                <h3 style="color: #333; margin-bottom: 20px;">Agregar Nueva Película</h3>
+        const mainContent = document.getElementById('main-content');
+
+        mainContent.innerHTML = `
+            <div class="section-title">Agregar Nueva Película</div>
+
+            <div class="form-container">
                 <form id="add-movie-form">
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: #333; margin-bottom: 5px;">Título:</label>
-                        <input type="text" id="titulo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <div class="form-group">
+                        <label for="titulo">Título *</label>
+                        <input type="text" id="titulo" required>
+                        <span class="error-message" id="titulo-error"></span>
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: #333; margin-bottom: 5px;">Género:</label>
-                        <input type="text" id="genero" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+
+                    <div class="form-group">
+                        <label for="genero">Género *</label>
+                        <select id="genero" required>
+                            <option value="">Seleccionar género</option>
+                            <option value="Acción">Acción</option>
+                            <option value="Comedia">Comedia</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Terror">Terror</option>
+                            <option value="Ciencia Ficción">Ciencia Ficción</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Animación">Animación</option>
+                            <option value="Documental">Documental</option>
+                        </select>
+                        <span class="error-message" id="genero-error"></span>
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: #333; margin-bottom: 5px;">Año:</label>
-                        <input type="number" id="anio" min="1900" max="2100" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+
+                    <div class="form-group">
+                        <label for="anio">Año</label>
+                        <input type="number" id="anio" min="1900" max="2100">
+                        <span class="error-message" id="anio-error"></span>
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: #333; margin-bottom: 5px;">Director:</label>
-                        <input type="text" id="director" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+
+                    <div class="form-group">
+                        <label for="director">Director</label>
+                        <input type="text" id="director">
+                        <span class="error-message" id="director-error"></span>
                     </div>
-                    <button type="submit" style="width: 100%; padding: 12px; background-color: #333; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
-                        Agregar Película
-                    </button>
+
+                    <button type="submit" class="btn">Agregar Película</button>
                 </form>
             </div>
         `;
 
-        document.getElementById('add-movie-form').addEventListener('submit', async (e) => {
+        // Validación del formulario
+        const form = document.getElementById('add-movie-form');
+        const inputs = {
+            titulo: document.getElementById('titulo'),
+            genero: document.getElementById('genero'),
+            anio: document.getElementById('anio'),
+            director: document.getElementById('director')
+        };
+
+        // Validación en tiempo real
+        inputs.titulo.addEventListener('blur', () => validateMovieField('titulo'));
+        inputs.genero.addEventListener('change', () => validateMovieField('genero'));
+        inputs.anio.addEventListener('blur', () => validateMovieField('anio'));
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Validar todos los campos
+            const isTituloValid = validateMovieField('titulo');
+            const isGeneroValid = validateMovieField('genero');
+            const isAnioValid = validateMovieField('anio');
+
+            if (!isTituloValid || !isGeneroValid || !isAnioValid) {
+                showNotification('Por favor corrige los errores', 'error');
+                return;
+            }
+
             const movieData = {
-                titulo: document.getElementById('titulo').value,
-                genero: document.getElementById('genero').value,
-                anio: parseInt(document.getElementById('anio').value) || null,
-                director: document.getElementById('director').value || null
+                titulo: inputs.titulo.value.trim(),
+                genero: inputs.genero.value,
+                anio: inputs.anio.value ? parseInt(inputs.anio.value) : null,
+                director: inputs.director.value.trim() || null
             };
 
             try {
@@ -133,94 +192,135 @@ document.addEventListener('DOMContentLoaded', () => {
                 await loadMovies();
                 loadSection('movies');
             } catch (error) {
-                showNotification('Error al agregar película: ' + error.message, 'error');
+                showNotification('Error: ' + error.message, 'error');
             }
         });
     }
 
-    function showDeleteMovieSection() {
-        const contentSection = document.getElementById('content-section');
+    function validateMovieField(fieldName) {
+        const input = document.getElementById(fieldName);
+        const value = input.value.trim();
+        let isValid = true;
+        let errorMessage = '';
 
-        const moviesHTML = movies.map(movie => `
-            <div style="background-color: #fff; padding: 15px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
-                <div style="color: #333;">
-                    <strong>${movie.titulo}</strong> (${movie.anio || 'N/A'}) - ${movie.genero}
-                </div>
-                <button onclick="deleteMovie(${movie.id})" style="background-color: #f44336; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
-                    Eliminar
-                </button>
-            </div>
-        `).join('');
+        switch(fieldName) {
+            case 'titulo':
+                if (!value) {
+                    errorMessage = 'El título es requerido';
+                    isValid = false;
+                } else if (value.length < 2) {
+                    errorMessage = 'El título debe tener al menos 2 caracteres';
+                    isValid = false;
+                }
+                break;
 
-        contentSection.innerHTML = `
-            <div style="max-width: 800px; margin: 0 auto;">
-                <h3 style="color: #333; margin-bottom: 20px;">Eliminar Películas</h3>
-                ${moviesHTML || '<p>No hay películas disponibles</p>'}
-            </div>
-        `;
-    }
+            case 'genero':
+                if (!value) {
+                    errorMessage = 'Selecciona un género';
+                    isValid = false;
+                }
+                break;
 
-    function showEditMovieSection() {
-        const contentSection = document.getElementById('content-section');
+            case 'anio':
+                if (value) {
+                    const year = parseInt(value);
+                    if (year < 1900 || year > 2100) {
+                        errorMessage = 'El año debe estar entre 1900 y 2100';
+                        isValid = false;
+                    }
+                }
+                break;
+        }
 
-        const moviesHTML = movies.map(movie => `
-            <div style="background-color: #fff; padding: 15px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
-                <div style="color: #333;">
-                    <strong>${movie.titulo}</strong> (${movie.anio || 'N/A'}) - ${movie.genero}
-                </div>
-                <button onclick="editMovie(${movie.id})" style="background-color: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
-                    Editar
-                </button>
-            </div>
-        `).join('');
+        const errorSpan = document.getElementById(${fieldName}-error);
+        if (errorSpan) {
+            if (!isValid) {
+                errorSpan.textContent = errorMessage;
+                errorSpan.style.color = '#e50914';
+                errorSpan.style.fontSize = '12px';
+                errorSpan.style.marginTop = '5px';
+                errorSpan.style.display = 'block';
+                input.style.borderColor = '#e50914';
+            } else {
+                errorSpan.textContent = '';
+                errorSpan.style.display = 'none';
+                input.style.borderColor = '#555';
+            }
+        }
 
-        contentSection.innerHTML = `
-            <div style="max-width: 800px; margin: 0 auto;">
-                <h3 style="color: #333; margin-bottom: 20px;">Editar Películas</h3>
-                ${moviesHTML || '<p>No hay películas disponibles</p>'}
-            </div>
-        `;
+        return isValid;
     }
 
     function showMoviesList() {
-        const contentSection = document.getElementById('content-section');
+        const mainContent = document.getElementById('main-content');
 
-        const moviesHTML = movies.map(movie => `
-            <div style="background-color: #fff; padding: 15px; margin-bottom: 10px; border-radius: 5px; color: #333;">
-                <h4 style="margin: 0 0 10px 0;">${movie.titulo}</h4>
-                <p style="margin: 5px 0;"><strong>Género:</strong> ${movie.genero}</p>
-                <p style="margin: 5px 0;"><strong>Año:</strong> ${movie.anio || 'N/A'}</p>
-                <p style="margin: 5px 0;"><strong>Director:</strong> ${movie.director || 'N/A'}</p>
-            </div>
-        `).join('');
+        mainContent.innerHTML = `
+            <div class="section-title">Catálogo Completo (${movies.length})</div>
 
-        contentSection.innerHTML = `
-            <div style="max-width: 800px; margin: 0 auto;">
-                <h3 style="color: #333; margin-bottom: 20px;">Catálogo de Películas (${movies.length})</h3>
-                <div style="max-height: 600px; overflow-y: auto;">
-                    ${moviesHTML || '<p>No hay películas disponibles</p>'}
-                </div>
+            <div class="movie-grid">
+                ${movies.map(movie => `
+                    <div class="movie-card">
+                        <div class="movie-title">${movie.titulo}</div>
+                        <div class="movie-info">Género: ${movie.genero}</div>
+                        <div class="movie-info">Año: ${movie.anio || 'N/A'}</div>
+                        <div class="movie-info">Director: ${movie.director || 'N/A'}</div>
+                        <div class="movie-actions">
+                            <button class="btn btn-secondary" onclick="editMovie(${movie.id})" style="font-size: 12px; padding: 8px 12px;">
+                                Editar
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteMovie(${movie.id})" style="font-size: 12px; padding: 8px 12px;">
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `).join('')}
             </div>
         `;
     }
 
     function showProfile() {
-        const contentSection = document.getElementById('content-section');
-        contentSection.innerHTML = `
-            <div style="background-color: #fff; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto;">
-                <h3 style="color: #333; margin-bottom: 20px;">Perfil de Administrador</h3>
-                <p style="color: #333;"><strong>Nombre:</strong> ${currentUser.userName}</p>
-                <p style="color: #333;"><strong>Email:</strong> ${currentUser.email}</p>
-                <p style="color: #333;"><strong>Rol:</strong> ${currentUser.role}</p>
-                <p style="color: #333;"><strong>Estado:</strong> ${currentUser.status}</p>
-                <button onclick="logout()" style="margin-top: 20px; width: 100%; padding: 12px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        const mainContent = document.getElementById('main-content');
+
+        mainContent.innerHTML = `
+            <div class="section-title">Mi Perfil</div>
+
+            <div class="form-container">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #b3b3b3;">Nombre</label>
+                    <div style="padding: 14px; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                        ${currentUser.userName}
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #b3b3b3;">Email</label>
+                    <div style="padding: 14px; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                        ${currentUser.email}
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #b3b3b3;">Rol</label>
+                    <div style="padding: 14px; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                        ${currentUser.role}
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #b3b3b3;">Estado</label>
+                    <div style="padding: 14px; background: rgba(255,255,255,0.05); border-radius: 4px;">
+                        ${currentUser.status}
+                    </div>
+                </div>
+
+                <button onclick="logout()" class="btn btn-danger" style="width: 100%;">
                     Cerrar Sesión
                 </button>
             </div>
         `;
     }
 
-    // Funciones globales para botones
+    // Funciones globales
     window.deleteMovie = async (id) => {
         if (!confirm('¿Estás seguro de eliminar esta película?')) return;
 
@@ -228,11 +328,11 @@ document.addEventListener('DOMContentLoaded', () => {
             await apiRequest(API_CONFIG.ENDPOINTS.MOVIE_BY_ID(id), {
                 method: 'DELETE'
             });
-            showNotification('Película eliminada exitosamente', 'success');
+            showNotification('Película eliminada', 'success');
             await loadMovies();
-            showDeleteMovieSection();
+            showMoviesList();
         } catch (error) {
-            showNotification('Error al eliminar: ' + error.message, 'error');
+            showNotification('Error: ' + error.message, 'error');
         }
     };
 
@@ -240,30 +340,49 @@ document.addEventListener('DOMContentLoaded', () => {
         const movie = movies.find(m => m.id === id);
         if (!movie) return;
 
-        const contentSection = document.getElementById('content-section');
-        contentSection.innerHTML = `
-            <div style="background-color: #fff; padding: 20px; border-radius: 8px; max-width: 500px; margin: 0 auto;">
-                <h3 style="color: #333; margin-bottom: 20px;">Editar Película</h3>
+        const mainContent = document.getElementById('main-content');
+
+        mainContent.innerHTML = `
+            <div class="section-title">Editar Película</div>
+
+            <div class="form-container">
                 <form id="edit-movie-form">
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: #333; margin-bottom: 5px;">Título:</label>
-                        <input type="text" id="edit-titulo" value="${movie.titulo}" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <div class="form-group">
+                        <label for="edit-titulo">Título *</label>
+                        <input type="text" id="edit-titulo" value="${movie.titulo}" required>
+                        <span class="error-message" id="edit-titulo-error"></span>
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: #333; margin-bottom: 5px;">Género:</label>
-                        <input type="text" id="edit-genero" value="${movie.genero}" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+
+                    <div class="form-group">
+                        <label for="edit-genero">Género *</label>
+                        <select id="edit-genero" required>
+                            <option value="">Seleccionar género</option>
+                            <option value="Acción" ${movie.genero === 'Acción' ? 'selected' : ''}>Acción</option>
+                            <option value="Comedia" ${movie.genero === 'Comedia' ? 'selected' : ''}>Comedia</option>
+                            <option value="Drama" ${movie.genero === 'Drama' ? 'selected' : ''}>Drama</option>
+                            <option value="Terror" ${movie.genero === 'Terror' ? 'selected' : ''}>Terror</option>
+                            <option value="Ciencia Ficción" ${movie.genero === 'Ciencia Ficción' ? 'selected' : ''}>Ciencia Ficción</option>
+                            <option value="Romance" ${movie.genero === 'Romance' ? 'selected' : ''}>Romance</option>
+                            <option value="Thriller" ${movie.genero === 'Thriller' ? 'selected' : ''}>Thriller</option>
+                            <option value="Animación" ${movie.genero === 'Animación' ? 'selected' : ''}>Animación</option>
+                            <option value="Documental" ${movie.genero === 'Documental' ? 'selected' : ''}>Documental</option>
+                        </select>
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: #333; margin-bottom: 5px;">Año:</label>
-                        <input type="number" id="edit-anio" value="${movie.anio || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+
+                    <div class="form-group">
+                        <label for="edit-anio">Año</label>
+                        <input type="number" id="edit-anio" value="${movie.anio || ''}" min="1900" max="2100">
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: #333; margin-bottom: 5px;">Director:</label>
-                        <input type="text" id="edit-director" value="${movie.director || ''}" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+
+                    <div class="form-group">
+                        <label for="edit-director">Director</label>
+                        <input type="text" id="edit-director" value="${movie.director || ''}">
                     </div>
-                    <button type="submit" style="width: 100%; padding: 12px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        Guardar Cambios
-                    </button>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn">Guardar Cambios</button>
+                        <button type="button" class="btn btn-secondary" onclick="loadSection('movies')">Cancelar</button>
+                    </div>
                 </form>
             </div>
         `;
@@ -272,45 +391,49 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
 
             const updatedMovie = {
-                titulo: document.getElementById('edit-titulo').value,
+                titulo: document.getElementById('edit-titulo').value.trim(),
                 genero: document.getElementById('edit-genero').value,
-                anio: parseInt(document.getElementById('edit-anio').value) || null,
-                director: document.getElementById('edit-director').value || null
+                anio: document.getElementById('edit-anio').value ? parseInt(document.getElementById('edit-anio').value) : null,
+                director: document.getElementById('edit-director').value.trim() || null
             };
+
+            // Validaciones
+            if (!updatedMovie.titulo || updatedMovie.titulo.length < 2) {
+                showNotification('El título debe tener al menos 2 caracteres', 'error');
+                return;
+            }
+
+            if (!updatedMovie.genero) {
+                showNotification('Selecciona un género', 'error');
+                return;
+            }
 
             try {
                 await apiRequest(API_CONFIG.ENDPOINTS.MOVIE_BY_ID(id), {
                     method: 'PUT',
                     body: JSON.stringify(updatedMovie)
                 });
-                showNotification('Película actualizada exitosamente', 'success');
+                showNotification('Película actualizada', 'success');
                 await loadMovies();
-                showEditMovieSection();
+                showMoviesList();
             } catch (error) {
-                showNotification('Error al actualizar: ' + error.message, 'error');
+                showNotification('Error: ' + error.message, 'error');
             }
         });
     };
 
     window.logout = () => {
-        SessionManager.clearUser();
-        window.location.href = 'StreamMovie_login_clean.html';
+        if (confirm('¿Cerrar sesión?')) {
+            SessionManager.clearUser();
+            window.location.href = 'StreamMovie_login_clean.html';
+        }
     };
+
+    window.loadSection = loadSection;
 
     function showNotification(message, type) {
         const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            background-color: ${type === 'success' ? '#4CAF50' : '#f44336'};
-            color: white;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-        `;
+        notification.className = notification ${type};
         notification.textContent = message;
         document.body.appendChild(notification);
 

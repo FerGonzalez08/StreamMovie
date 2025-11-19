@@ -1,28 +1,182 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream Movie - Login</title>
-    
-    <link rel="stylesheet" href="StreamMovie_login.css">
+    <title>StreamMovie - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                        url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1920') center/cover;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .login-container {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 60px;
+            border-radius: 8px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #b3b3b3;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #fff;
+            background: #454545;
+        }
+
+        input.error {
+            border-color: #e50914;
+        }
+
+        .error-message {
+            color: #e50914;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #f40612;
+        }
+
+        .btn:disabled {
+            background: #733;
+            cursor: not-allowed;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+        }
+
+        .message.error {
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            color: #e50914;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .help-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #737373;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1 class="app-title">Stream Movie</h1>
-        <h2>Login</h2>
-        <form>
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="cta-button sign-in">Sign In</button>
-            <button type="button" class="cta-button sign-out">Sign Out</button>
-        </form>
-    </div>
+<div class="login-container">
+    <div class="logo">STREAMMOVIE</div>
+    <h2>Iniciar Sesión</h2>
+
+    <form id="login-form">
+        <div class="form-group">
+            <label for="username">Usuario o Email</label>
+            <input type="text" id="username" name="username" autocomplete="username">
+            <div class="error-message" id="username-error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" autocomplete="current-password">
+            <div class="error-message" id="password-error"></div>
+        </div>
+
+        <button type="submit" class="btn" id="login-btn">Iniciar Sesión</button>
+    </form>
+
+    <p class="help-text">Usuarios de prueba: admin1 / cliente1</p>
+</div>
+
+<script src="config.js"></script>
+<script src="login.js"></script>
 </body>
 </html>
