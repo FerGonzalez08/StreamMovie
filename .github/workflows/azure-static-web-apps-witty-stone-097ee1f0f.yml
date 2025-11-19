@@ -28,7 +28,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
 
-          app_location: "/web"     # <--- TU CARPETA REAL
+          app_location: "web"     # <--- TU CARPETA REAL
           api_location: ""         # <--- no usas API
           # NO output_location !!!
 
