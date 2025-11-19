@@ -232,7 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
 
-        const errorSpan = document.getElementById(${fieldName}-error);
+        // ✅ CORRECCIÓN: Usar template literals con backticks
+        const errorSpan = document.getElementById(`${fieldName}-error`);
         if (errorSpan) {
             if (!isValid) {
                 errorSpan.textContent = errorMessage;
@@ -433,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showNotification(message, type) {
         const notification = document.createElement('div');
-        notification.className = notification ${type};
+        notification.className = `notification ${type}`;
         notification.textContent = message;
         document.body.appendChild(notification);
 
