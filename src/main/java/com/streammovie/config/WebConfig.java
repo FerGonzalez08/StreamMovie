@@ -13,7 +13,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000", "http://localhost:5173", "https://tu-frontend.azurestaticapps.net") // ajusta
+                        .allowedOrigins("http://localhost:3000", "http://localhost:5173", "https://witty-stone-097ee1f0f.3.azurestaticapps.net")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

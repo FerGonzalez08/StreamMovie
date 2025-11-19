@@ -2,50 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Meta para responsive: asegura que el layout sea usable en móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stream Movie - Admin Dashboard</title>
     <link rel="stylesheet" href="StreamMovie_admin.css">
 </head>
 <body>
-    <!-- Header: título principal de la aplicación -->
-    <header>
-        <h1 class="app-title">Stream Movie</h1>
-    </header>
-    
-    <!-- Nav: enlaces rápidos a secciones administrativas / usuario -->
-    <nav>
-        <ul>
-            <!-- Cada enlace apunta a un ancla local (placeholder). 
-                 En la versión final deberían enlazar a rutas reales o manejarse con JS. -->
-            <li><a href="#add-movie">Add Movie</a></li>
-            <li><a href="#erase-movie">Erase Movie</a></li>
-            <li><a href="#edit-movie">Edit Movie</a></li>
-            <li><a href="#profile">Profile</a></li>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#recommendations">Recommendations</a></li>
-            <li><a href="#my-list">My List</a></li>
-            <li><a href="#movies">Movies</a></li>
-        </ul>
-    </nav>
-    
-    <!-- Main: contenido principal del dashboard -->
-    <main>
-        <div class="dashboard-content">
-            <h2>Admin Dashboard</h2>
-            <!-- Breve bienvenida; aquí se puede insertar contenido dinámico (estadísticas, tablas) -->
-            <p>Welcome, Admin! Use the menu above to manage movies, view recommendations, or access your profile.</p>
-            <!-- Placeholder para información reciente o widgets -->
-            <div style="margin-top: 20px;">
-                <p>Recent Actions: Added 5 movies this week.</p>
-            </div>
-        </div>
-    </main>
+<header>
+    <h1 class="app-title">Stream Movie</h1>
+</header>
 
-    <!-- Notas:
-         - Considerar añadir etiquetas ARIA y atributos alt para mejorar accesibilidad.
-         - Para seguridad y rendimiento, evitar cargar imágenes externas en producción sin control.
-         - Reemplazar los anchors por links reales o manejar navegación con JS cuando haya backend/SPA.
-    -->
+<nav>
+    <ul>
+        <li><a href="#add-movie">Add Movie</a></li>
+        <li><a href="#erase-movie">Erase Movie</a></li>
+        <li><a href="#edit-movie">Edit Movie</a></li>
+        <li><a href="#movies">Movies</a></li>
+        <li><a href="#profile">Profile</a></li>
+        <li><a href="#home">Home</a></li>
+    </ul>
+</nav>
+
+<main>
+    <div class="dashboard-content">
+        <h2>Admin Dashboard</h2>
+        <p>Cargando...</p>
+    </div>
+</main>
+
+<!-- Scripts -->
+<script src="config.js"></script>
+<script src="admin.js"></script>
 </body>
 </html>
