@@ -10,9 +10,14 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*") // En producción, cambia esto por tu dominio específico
+                .allowedOrigins(
+                        "http://localhost:3000",
+                        "http://localhost:5173",
+                        "https://witty-stone-097ee1f0f.3.azurestaticapps.net"
+                )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(false);
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }
